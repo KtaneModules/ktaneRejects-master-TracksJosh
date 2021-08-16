@@ -94,7 +94,7 @@ public class ThreeNPlusOneScript : MonoBehaviour {
         {
             for (int i = 0; i < 14; i++)
             {
-                if ((storedEntry == Math.Pow(2, i).ToString() && Answer == Math.Pow(2, i)) || (storedEntry == "7" && Answer == 7) || (storedEntry == "3" && Answer == 3))
+                if ((storedEntry == Math.Pow(2, i).ToString() && Answer == Math.Pow(2, i)) || (storedEntry == "7" && Answer == 7) || (storedEntry == "3" && Answer == 3) || (storedEntry == "5" && Answer == 5))
                 {
                     if (Bomb.GetSolvedModuleNames().Count < Bomb.GetSolvableModuleNames().Count)
                         Audio.PlaySoundAtTransform("solve", transform);
