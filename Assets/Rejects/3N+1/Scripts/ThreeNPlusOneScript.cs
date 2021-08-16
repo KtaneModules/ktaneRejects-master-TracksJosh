@@ -175,7 +175,7 @@ public class ThreeNPlusOneScript : MonoBehaviour {
         yield return null;
         if (Parameters[0] != "SUBMIT" || Parameters.Length != 2)
             yield return "sendtochaterror I don't understand";
-        else if (Parameters[1].Length > 2 || Parameters[1].Length == 0)
+        else if (Parameters[1].Length > 3 || Parameters[1].Length == 0)
             yield return "sendtochaterror I don't understand";
         else if (!(Parameters[1].Any(x => "0123456789".Contains(x))))
             yield return "sendtochaterror I don't understand";
