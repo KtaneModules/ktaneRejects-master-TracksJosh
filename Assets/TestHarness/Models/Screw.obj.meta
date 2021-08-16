@@ -1,7 +1,9 @@
 fileFormatVersion: 2
-guid: 0726b4fcadf7977419ce266b811639dd
+guid: 8cff299c848d5d94199522996b37d85f
+timeCreated: 1537837732
+licenseType: Pro
 ModelImporter:
-  serializedVersion: 22
+  serializedVersion: 21
   fileIDToRecycleName:
     100000: MeshBody5
     100002: //RootNode
@@ -10,17 +12,10 @@ ModelImporter:
     2300000: MeshBody5
     3300000: MeshBody5
     4300000: MeshBody5
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: MeshBody5Mat
-    second: {fileID: 2100000, guid: 0789c420801b7624f949e13519b6f014, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -33,7 +28,6 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -58,8 +52,6 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
-    preserveHierarchy: 0
-    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88

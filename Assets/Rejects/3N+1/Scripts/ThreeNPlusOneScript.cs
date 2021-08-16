@@ -23,7 +23,7 @@ public class ThreeNPlusOneScript : MonoBehaviour {
 
     //Variables
     private string storedEntry = "";
-    private int selectedNumber, Answer, Stage, Z, Y;
+    private int selectedNumber, Answer, Stage;
     static int moduleIdCounter = 1;
     int moduleId;
     bool isSolved = false;
@@ -58,7 +58,10 @@ public class ThreeNPlusOneScript : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        selectedNumber = Rnd.Range(1, 10000);
+        selectedNumber = Rnd.Range(2, 100);
+        if (selectedNumber % 2 == 0) selectedNumber -= 1;
+        if (selectedNumber == 27) selectedNumber -= 2;
+        if (selectedNumber == 97) selectedNumber -= 2;
         DisplayText.text = selectedNumber.ToString();
         Stage = 0;
         Answer = cycleSize(selectedNumber)-1;
@@ -87,26 +90,32 @@ public class ThreeNPlusOneScript : MonoBehaviour {
         Animator anim = Moving[10];
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, SubmitButton.transform);
         SubmitButton.AddInteractionPunch(InteractionPunchIntensityModifier);
-
-        if ((storedEntry == "3" && Answer == 3) || (storedEntry == "7" && Answer == 7) || (storedEntry == "0" && Answer == 0) || (storedEntry == "5" && Answer == 5))
+        if (storedEntry == Answer.ToString() && !isSolved)
         {
-            if (Bomb.GetSolvedModuleNames().Count < Bomb.GetSolvableModuleNames().Count)
-                Audio.PlaySoundAtTransform("solve", transform);
-            isSolved = true;
-            Module.HandlePass();
-            Debug.LogFormat("[3N+1 #{0}] {1} is {2}. Completed All Stages. Module Solved.", moduleId, selectedNumber, Answer);
-        }
-        else if(storedEntry == Answer.ToString())
-        {
-            Debug.LogFormat("[3N+1 #{0}] {1} is {2}. Continuing...", moduleId, selectedNumber, Answer);
-            Audio.PlaySoundAtTransform("Select", transform);
-            selectedNumber = Answer;
-            DisplayText.text = selectedNumber.ToString();
-            storedEntry = "";
+            for (int i = 0; i < 14; i++)
+            {
+                if ((storedEntry == Math.Pow(2, i).ToString() && Answer == Math.Pow(2, i)) || (storedEntry == "7" && Answer == 7) || (storedEntry == "3" && Answer == 3))
+                {
+                    if (Bomb.GetSolvedModuleNames().Count < Bomb.GetSolvableModuleNames().Count)
+                        Audio.PlaySoundAtTransform("solve", transform);
+                    isSolved = true;
+                    Module.HandlePass();
+                    Debug.LogFormat("[3N+1 #{0}] {1} is {2}. Completed All Stages. Module Solved.", moduleId, selectedNumber, Answer);
+                }
+            }
+            if (!isSolved)
+            {
+                Debug.LogFormat("[3N+1 #{0}] {1} is {2}. Continuing...", moduleId, selectedNumber, Answer);
+                Audio.PlaySoundAtTransform("Select", transform);
+                selectedNumber = Answer;
+                DisplayText.text = selectedNumber.ToString();
+                storedEntry = "";
 
-            Stage++;
-            Answer = cycleSize(selectedNumber) - 1;
-            Debug.Log(Answer);
+                Stage++;
+                Answer = cycleSize(selectedNumber) - 1;
+                Debug.Log(Answer);
+            }
+            
         }
         else
         {
@@ -115,6 +124,8 @@ public class ThreeNPlusOneScript : MonoBehaviour {
             DisplayText.text = selectedNumber.ToString();
             storedEntry = "";
         }
+        
+        
     }
 
     void NumberInput(int number)

@@ -1,7 +1,9 @@
 fileFormatVersion: 2
-guid: 0571c9d6008bbec4ca6c3dfa3fc3ecfa
+guid: ec4f0e85e9ff8134ab3b897e8087fb2a
+timeCreated: 1537913323
+licenseType: Pro
 ModelImporter:
-  serializedVersion: 22
+  serializedVersion: 21
   fileIDToRecycleName:
     100000: Strike_Screen
     100002: //RootNode
@@ -10,17 +12,10 @@ ModelImporter:
     2300000: Strike_Screen
     3300000: Strike_Screen
     4300000: Strike_Screen
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Strike_ScreenMat
-    second: {fileID: 2100000, guid: 6962ec9ac646bb843aad5fe9cdafb5ed, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -33,7 +28,6 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    importAnimatedCustomProperties: 0
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -58,8 +52,6 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
-    preserveHierarchy: 0
-    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
