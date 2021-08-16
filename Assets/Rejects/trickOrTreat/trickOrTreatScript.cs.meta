@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: c9b774372c0759d4ca4d86e93408246e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - audio: {instanceID: 0}
+  - bombModule: {fileID: 114677240216787618, guid: 201df8d68a5b6384eac04d4b7a182e56,
+      type: 2}
+  - costumeRender: {instanceID: 0}
+  - closeDoorRender: {instanceID: 0}
+  - openDoorRender: {instanceID: 0}
+  - trick: {instanceID: 0}
+  - treat: {instanceID: 0}
+  - table: {instanceID: 0}
+  - doorknob: {instanceID: 0}
+  - openDoor: {instanceID: 0}
+  - closeDoor: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
