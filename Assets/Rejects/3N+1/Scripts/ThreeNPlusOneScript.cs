@@ -58,10 +58,7 @@ public class ThreeNPlusOneScript : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        selectedNumber = Rnd.Range(2, 100);
-        if (selectedNumber % 2 == 0) selectedNumber -= 1;
-        if (selectedNumber == 27) selectedNumber -= 2;
-        if (selectedNumber == 97) selectedNumber -= 2;
+        selectedNumber = Rnd.Range(1, 100);
         DisplayText.text = selectedNumber.ToString();
         Stage = 0;
         Answer = cycleSize(selectedNumber)-1;
@@ -94,7 +91,7 @@ public class ThreeNPlusOneScript : MonoBehaviour {
         {
             for (int i = 0; i < 14; i++)
             {
-                if ((storedEntry == Math.Pow(2, i).ToString() && Answer == Math.Pow(2, i)) || (storedEntry == "7" && Answer == 7) || (storedEntry == "3" && Answer == 3) || (storedEntry == "5" && Answer == 5))
+                if ((storedEntry == Math.Pow(2, i).ToString() && Answer == Math.Pow(2, i)) || (storedEntry == "7" && Answer == 7) || (storedEntry == "3" && Answer == 3) || (storedEntry == "5" && Answer == 5) || (storedEntry == "0" && Answer == 0))
                 {
                     if (Bomb.GetSolvedModuleNames().Count < Bomb.GetSolvableModuleNames().Count)
                         Audio.PlaySoundAtTransform("solve", transform);
