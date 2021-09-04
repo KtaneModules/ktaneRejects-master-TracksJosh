@@ -1696,6 +1696,7 @@ MonoBehaviour:
   treat: {fileID: 114867281169835836}
   table: {fileID: 114978431560035190}
   doorknob: {fileID: 114530694101670462}
+  sky: {fileID: 1413045924355816}
   openDoor: {fileID: 1688087271163446}
   closeDoor: {fileID: 1957753227519768}
   TableE: {fileID: 1171638404163254}

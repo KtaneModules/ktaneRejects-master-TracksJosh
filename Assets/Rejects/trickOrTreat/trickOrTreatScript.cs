@@ -32,6 +32,7 @@ public class trickOrTreatScript : MonoBehaviour {
     public KMSelectable treat;
     public KMSelectable table;
     public KMSelectable doorknob;
+    public GameObject sky;
     public GameObject openDoor;
     public GameObject closeDoor;
     public GameObject TableE;
@@ -39,6 +40,7 @@ public class trickOrTreatScript : MonoBehaviour {
     private static int moduleIdCounter = 1;
     private int moduleId;
     private bool _isSolved;
+    private bool _isActive;
     public static string[] ignoredModules = null;
 
     private bool isRunning = false;
@@ -46,7 +48,6 @@ public class trickOrTreatScript : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        StartCoroutine(Waiting());
         moduleId = moduleIdCounter++;
         bombModule.OnActivate += Activate;
         door = true;
@@ -61,12 +62,35 @@ public class trickOrTreatScript : MonoBehaviour {
         treat.OnInteract += delegate { Treat(); return true; };
         table.OnInteract += delegate { Table(); return true; };
         doorknob.OnInteract += delegate { Doorknob(); return false; };
+
     }
-    
-        // Update is called once per frame
+
+    // Update is called once per frame
     void Update()
     {
-        
+        if (_isSolved == true)
+        {
+            _isActive = false;
+            isRunning = false;
+            clock = false;
+            trick.gameObject.SetActive(false);
+            treat.gameObject.SetActive(false);
+            closeDoor.gameObject.SetActive(false);
+            openDoor.gameObject.SetActive(false);
+            TableE.gameObject.SetActive(false);
+            costumeRender.gameObject.SetActive(false);
+            sky.gameObject.SetActive(false);
+        }
+        if (_isActive == true)
+        {
+            trick.gameObject.SetActive(true);
+            treat.gameObject.SetActive(true);
+        }
+        else
+        {
+            trick.gameObject.SetActive(false);
+            treat.gameObject.SetActive(false);
+        }
         if (door == true)
         {
             closeDoor.gameObject.SetActive(true);
@@ -80,8 +104,10 @@ public class trickOrTreatScript : MonoBehaviour {
         if (_stages >= _stagesSolve)
         {
             bombModule.HandlePass();
+            _isSolved = true;
+            StopCoroutine(Waiting());
         }
-        if (!isRunning) StartCoroutine(Waiting());
+        if (!isRunning && _isActive) StartCoroutine(Waiting());
 
         if(!clock) TableE.gameObject.SetActive(false);
         if(clock) TableE.gameObject.SetActive(true);
@@ -129,6 +155,7 @@ public class trickOrTreatScript : MonoBehaviour {
         if (_costumeIndex == 12)
         {
             bombModule.HandlePass();
+            _isSolved = true;
             _doorDong = -1;
             StopCoroutine(Waiting());
             door = true;
@@ -144,16 +171,26 @@ public class trickOrTreatScript : MonoBehaviour {
 
     void Doorknob()
     {
-        audio.PlaySoundAtTransform("answer", doorknob.transform);
-        StopCoroutine(Waiting());
-        if (_dingDong > 0)
+        if (_isActive)
         {
-            _doorDong = -1;
-            door = false;
+            audio.PlaySoundAtTransform("answer", doorknob.transform);
+            StopCoroutine(Waiting());
+            if (_dingDong > 0)
+            {
+                _doorDong = -1;
+                door = false;
+            }
+            else
+            {
+                bombModule.HandleStrike();
+                Softlock();
+
+            }
         }
         else
         {
-            bombModule.HandleStrike();
+            _isActive = true;
+            StartCoroutine(Waiting());
         }
     }
 
@@ -167,6 +204,7 @@ public class trickOrTreatScript : MonoBehaviour {
     {
         if (!(_stages >= _stagesSolve))
         {
+            //_costumeIndex = 1;
             _costumeIndex = Rnd.Range(0, 13);
             costumeRender.material = costumes[_costumeIndex];
             Debug.LogFormat("[Trick Or Treat #{0}] Costume is {1}. {2}", moduleId, costumes[_costumeIndex], _stages);
@@ -175,33 +213,39 @@ public class trickOrTreatScript : MonoBehaviour {
     
     IEnumerator Waiting()
     {
-        isRunning = true;
-        yield return new WaitForSecondsRealtime(10.0f);
-        dingDong();
-        PickCostume();
-        _doorDong = 10;
-        clock = true;
-        while (clock)
+        if (!_isSolved)
         {
-            _dingDong = 1;
-            yield return new WaitForSecondsRealtime(1.0f);
-            _doorDong -= 1;
-            if (_doorDong == 0)
+            isRunning = true;
+            yield return new WaitForSecondsRealtime(10.0f);
+            dingDong();
+            PickCostume();
+            _doorDong = 10;
+            clock = true;
+            while (clock)
             {
-                bombModule.HandleStrike();
-                _stages = 0;
-                Softlock();
+                _dingDong = 1;
+                yield return new WaitForSecondsRealtime(1.0f);
+                _doorDong -= 1;
+                if (_doorDong == 0)
+                {
+                    bombModule.HandleStrike();
+                    _stages = 0;
+                    Softlock();
+                }
             }
         }
     }
 
     void Softlock()
     {
-        StopCoroutine(Waiting());
-        _doorDong = Rnd.Range(10, 60);
-        _dingDong = 0;
-        door = true;
-        clock = false;
-        isRunning = false;
+        if (!_isSolved)
+        {
+            StopCoroutine(Waiting());
+            _doorDong = Rnd.Range(10, 60);
+            _dingDong = 0;
+            door = true;
+            clock = false;
+            isRunning = false;
+        }
     }
 }
