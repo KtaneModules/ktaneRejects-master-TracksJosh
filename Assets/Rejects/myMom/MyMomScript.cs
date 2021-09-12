@@ -40,21 +40,24 @@ public class MyMomScript : MonoBehaviour
     int moduleId;
     static int moduleIdCounter = 1;
 
+    private bool isSolved = false;
+
     void Start()
     {
+        isSolved = false;
         moduleId = moduleIdCounter++;
         GetComponent<KMBombModule>().OnActivate += OnActivate;
 
-        buttons[0].OnInteract += delegate { return RotateVertical(buttons[0], 1); };
-        buttons[1].OnInteract += delegate { return RotateVertical(buttons[1], 1); };
-        buttons[2].OnInteract += delegate { return RotateVertical(buttons[2], 2); };
-        buttons[3].OnInteract += delegate { return RotateVertical(buttons[3], 2); };
-        buttons[4].OnInteract += delegate { return RotateVertical(buttons[4], 3); };
-        buttons[5].OnInteract += delegate { return RotateVertical(buttons[5], 3); };
-        buttons[6].OnInteract += delegate { return RotateHorizontal(buttons[6], 0, -1); };
-        buttons[7].OnInteract += delegate { return RotateHorizontal(buttons[7], 0, 1); };
-        buttons[8].OnInteract += delegate { return RotateHorizontal(buttons[8], 1, -1); };
-        buttons[9].OnInteract += delegate { return RotateHorizontal(buttons[9], 1, 1); };
+        buttons[0].OnInteract += delegate { RotateVertical(buttons[0], 1); return false; };
+        buttons[1].OnInteract += delegate { RotateVertical(buttons[1], 1); return false; };
+        buttons[2].OnInteract += delegate { RotateVertical(buttons[2], 2); return false; };
+        buttons[3].OnInteract += delegate { RotateVertical(buttons[3], 2); return false; };
+        buttons[4].OnInteract += delegate { RotateVertical(buttons[4], 3); return false; };
+        buttons[5].OnInteract += delegate { RotateVertical(buttons[5], 3); return false; };
+        buttons[6].OnInteract += delegate { RotateHorizontal(buttons[6], 0, -1); return false; };
+        buttons[7].OnInteract += delegate { RotateHorizontal(buttons[7], 0, 1); return false; };
+        buttons[8].OnInteract += delegate { RotateHorizontal(buttons[8], 1, -1); return false; };
+        buttons[9].OnInteract += delegate { RotateHorizontal(buttons[9], 1, 1); return false; };
 
         /*
         for (int i = 0; i < 10; i += 2) {
@@ -66,7 +69,7 @@ public class MyMomScript : MonoBehaviour
             buttons[k].OnDeselect += delegate { DeselectGroup(j, k); };
         }
         */
-        submitButton.OnInteract += Submit;
+        submitButton.OnInteract += delegate {Submit(); return false; } ;
 
         x = 0;
         y = 0;
@@ -108,40 +111,46 @@ public class MyMomScript : MonoBehaviour
         RedrawSymbols();
     }
 
-    bool RotateVertical(KMSelectable button, int column)
+    void RotateVertical(KMSelectable button, int column)
     {
         Audio.PlaySoundAtTransform("tick", button.transform);
         button.AddInteractionPunch(0.25f);
-
-        var temp = display[0, column - 1];
-        display[0, column - 1] = display[1, column - 1];
-        display[1, column - 1] = temp;
-        RedrawSymbols();
-        return false;
+        if (!isSolved)
+        {
+            var temp = display[0, column - 1];
+            display[0, column - 1] = display[1, column - 1];
+            display[1, column - 1] = temp;
+            RedrawSymbols();
+        }
+        
     }
 
-    bool RotateHorizontal(KMSelectable button, int line, int direction = 0)
+    void RotateHorizontal(KMSelectable button, int line, int direction = 0)
     {
         Audio.PlaySoundAtTransform("tick", button.transform);
         button.AddInteractionPunch(0.25f);
 
-        if (direction == -1)
+        if (!isSolved)
         {
-            var temp = display[line, 0];
-            display[line, 0] = display[line, 1];
-            display[line, 1] = display[line, 2];
-            display[line, 2] = temp;
-        }
-        else
-        {
-            var temp = display[line, 2];
-            display[line, 2] = display[line, 1];
-            display[line, 1] = display[line, 0];
-            display[line, 0] = temp;
+            if (direction == -1)
+            {
+                var temp = display[line, 0];
+                display[line, 0] = display[line, 1];
+                display[line, 1] = display[line, 2];
+                display[line, 2] = temp;
+            }
+            else
+            {
+                var temp = display[line, 2];
+                display[line, 2] = display[line, 1];
+                display[line, 1] = display[line, 0];
+                display[line, 0] = temp;
+            }
+
+            RedrawSymbols();
         }
 
-        RedrawSymbols();
-        return false;
+        
     }
 
     void RedrawSymbols()
@@ -155,7 +164,7 @@ public class MyMomScript : MonoBehaviour
 
     }
 
-    bool Submit()
+    void Submit()
     {
         Audio.PlaySoundAtTransform("tick", this.transform);
         GetComponent<KMSelectable>().AddInteractionPunch();
@@ -170,16 +179,18 @@ public class MyMomScript : MonoBehaviour
                     Debug.LogFormat("[My Mom #{0}] Wrong solution. Strike.", moduleId);
                     BombModule.HandleStrike();
                     Audio.PlaySoundAtTransform("screech", submitButton.transform);
-                    return false;
                 }
             }
         }
 
-        Debug.LogFormat("[My Mom #{0}] Module solved.", moduleId);
-        BombModule.HandlePass();
-        Audio.PlaySoundAtTransform("mother", submitButton.transform);
-        StartCoroutine(Animate());
-        return false;
+        if (!isSolved)
+        {
+            Debug.LogFormat("[My Mom #{0}] Module solved.", moduleId);
+            BombModule.HandlePass();
+            Audio.PlaySoundAtTransform("mother", submitButton.transform);
+            StartCoroutine(Animate());
+            isSolved = true;
+        }
     }
 
     IEnumerator Animate()
