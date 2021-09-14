@@ -17,6 +17,6 @@ MonoBehaviour:
   description: "I put these modules in front of a mirror and they all reflected my
     face back\r\n\r\nModule IDs:\r\n\r\n3N+1: threeNPlusOne\r\nTrick Or Treat: trickOrTreat\r\nMy
     Mom: myMom"
-  version: 1.22
+  version: 1.23
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 6af490b76f0d60f47b06199a448b4aef, type: 3}

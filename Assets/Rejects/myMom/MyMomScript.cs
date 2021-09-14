@@ -229,6 +229,10 @@ public class MyMomScript : MonoBehaviour
         buttons[b2].gameObject.GetComponent<Renderer>().sharedMaterial = WhiteButton;
     }
 
+#pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"Cycle a row with cycle t l. Cycle a column with cycle m. Submit with !1 submit. Rows are TL/TR/BL/BR, columns are L/R/M. Spaces are important!";
+#pragma warning restore 414
+
     KMSelectable[] ProcessTwitchCommand(string command)
     {
         command = command.Trim().ToLowerInvariant();
