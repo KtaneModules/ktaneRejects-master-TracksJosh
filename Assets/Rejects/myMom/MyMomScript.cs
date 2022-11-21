@@ -265,7 +265,7 @@ public class MyMomScript : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Cycle a row with cycle t l. Cycle a column with cycle m. Submit with !1 submit. Rows are TL/TR/BL/BR, columns are L/R/M. Spaces are important!";
+    private readonly string TwitchHelpMessage = @"Cycle a row with cycle t l. Cycle a column with cycle m. Submit with !{0} submit. Rows are TL/TR/BL/BR, columns are L/R/M. Spaces are important!";
 #pragma warning restore 414
 
     KMSelectable[] ProcessTwitchCommand(string command)
