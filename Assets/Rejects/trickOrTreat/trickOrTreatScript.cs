@@ -88,6 +88,7 @@ public class trickOrTreatScript : MonoBehaviour
                 }
                 else if (_specialHorse)
                 {
+                    CostumeNumber = 0;
                     Debug.LogFormat("[Trick Or Treat #{0}] WHO'S THAT AT THE DOOR?!?!", moduleId);
                 }
                 else
