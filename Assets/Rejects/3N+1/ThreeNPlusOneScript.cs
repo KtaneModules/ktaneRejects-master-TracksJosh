@@ -2,12 +2,10 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using KModkit;
 using Rnd = UnityEngine.Random;
-using System.Collections.Generic;
 
-public class ThreeNPlusOneScript : MonoBehaviour {
-
+public class ThreeNPlusOneScript : MonoBehaviour
+{
     //Bomb Sound and Info
     public KMAudio Audio;
     public KMBombInfo Bomb;
@@ -56,13 +54,13 @@ public class ThreeNPlusOneScript : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         selectedNumber = Rnd.Range(1, 100);
         DisplayText.text = selectedNumber.ToString();
         Stage = 0;
-        Answer = cycleSize(selectedNumber)-1;
-        Debug.Log(Answer);
+        Answer = CycleSize(selectedNumber) - 1;
+        LogScreen();
     }
 
     void ClearEntry()
@@ -75,7 +73,8 @@ public class ThreeNPlusOneScript : MonoBehaviour {
         CLRButton.AddInteractionPunch(InteractionPunchIntensityModifier);
 
         storedEntry = "";
-        DisplayText.text = selectedNumber.ToString(); Debug.LogFormat("[3N+1 #{0}] Clearing Screen, Showing Current number {1}", moduleId, selectedNumber);
+        DisplayText.text = selectedNumber.ToString();
+        Debug.LogFormat("[3N+1 #{0}] Clearing Screen, Showing Current number {1}", moduleId, selectedNumber);
     }
 
 
@@ -109,10 +108,10 @@ public class ThreeNPlusOneScript : MonoBehaviour {
                 storedEntry = "";
 
                 Stage++;
-                Answer = cycleSize(selectedNumber) - 1;
-                Debug.Log(Answer);
+                Answer = CycleSize(selectedNumber) - 1;
+                LogScreen();
             }
-            
+
         }
         else
         {
@@ -121,8 +120,14 @@ public class ThreeNPlusOneScript : MonoBehaviour {
             DisplayText.text = selectedNumber.ToString();
             storedEntry = "";
         }
-        
-        
+
+
+    }
+
+    private void LogScreen()
+    {
+        Debug.LogFormat("[3N+1 #{0}] Showing Current number {1}", moduleId, selectedNumber);
+        Debug.LogFormat("[3N+1 #{0}] Expected answer: {1}", moduleId, Answer);
     }
 
     void NumberInput(int number)
@@ -134,14 +139,14 @@ public class ThreeNPlusOneScript : MonoBehaviour {
         NumberButtons[number].AddInteractionPunch(InteractionPunchIntensityModifier);
 
         if (storedEntry.Length == 3)
-           return;
+            return;
 
-        storedEntry = storedEntry + number;
+        storedEntry += number;
         Debug.LogFormat("[3N+1 #{0}] Currently Displaying {1}.", moduleId, storedEntry);
         DisplayText.text = storedEntry;
     }
 
-    int cycleSize(int x)
+    int CycleSize(int x)
     {
         int cycle = 1;
 
@@ -149,11 +154,11 @@ public class ThreeNPlusOneScript : MonoBehaviour {
         {
             if (x % 2 == 0)
             { //if odd
-                x = x/2;
+                x /= 2;
             }
             else
             { //if even
-                x = x*3+1;
+                x = x * 3 + 1;
             }
             ++cycle;
         }
@@ -201,7 +206,7 @@ public class ThreeNPlusOneScript : MonoBehaviour {
             SubmitButton.OnInteract();
             yield return new WaitForSeconds(.5f);
         }
-            
+
     }
 }
 
