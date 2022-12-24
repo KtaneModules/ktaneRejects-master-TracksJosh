@@ -1,18 +1,16 @@
 ﻿using UnityEngine;
-using System.Linq;
 using Rnd = UnityEngine.Random;
 using System.Collections;
 using System.Text.RegularExpressions;
-using System;
-using KModkit;
 
 public class trickOrTreatScript : MonoBehaviour
 {
-
-    public KMAudio audio;
+    public KMAudio Audio;
     public KMBombModule bombModule;
     public Material[] costumes;
+    public Material secretariatmat;
     public Renderer costumeRender;
+    public AudioSource HorseMusic;
 
     public KMSelectable trick;
     public KMSelectable treat;
@@ -30,6 +28,9 @@ public class trickOrTreatScript : MonoBehaviour
     int StageAmount, StageAdvanced = 0, CostumeNumber;
     Coroutine TimeIntervals;
     private Coroutine _doorAnimation;
+
+    private bool _specialPerson;
+    private bool _specialHorse;
 
 #pragma warning disable 0649
     private bool TwitchPlaysActive;
@@ -76,12 +77,19 @@ public class trickOrTreatScript : MonoBehaviour
                 StopCoroutine(TimeIntervals);
                 DoorbellRinging = false;
                 DoorOpened = true;
-                if (StageAdvanced > 3 && Rnd.Range(0, 13) == 0)
+                int rndSecretariat = Rnd.Range(0, 100);
+                int rndKanye = Rnd.Range(0, 13);
+                _specialPerson = rndKanye == 0 && StageAdvanced > 3;
+                _specialHorse = rndSecretariat == 0 && StageAdvanced > 3;
+                if (_specialPerson)
                 {
                     CostumeNumber = 12;
                     Debug.LogFormat("[Trick Or Treat #{0}] Is that KANYE!? Give him ALL THE CANDY.", moduleId);
                 }
-
+                else if (_specialHorse)
+                {
+                    Debug.LogFormat("[Trick Or Treat #{0}] WHO'S THAT AT THE DOOR?!?!", moduleId);
+                }
                 else
                 {
                     if (Rnd.Range(0, 3) == 0)
@@ -96,8 +104,17 @@ public class trickOrTreatScript : MonoBehaviour
                         Debug.LogFormat("[Trick Or Treat #{0}] Cool costume. A candy for you.", moduleId);
                     }
                 }
-                audio.PlaySoundAtTransform("answer", doorknob.transform);
+                if (_specialHorse)
+                {
+                    Audio.PlaySoundAtTransform("whosthatatthedoor", transform);
+                    costumeRender.material = secretariatmat;
+                    StartCoroutine(HorseSong());
+                }
+                else
+                {
+                    Audio.PlaySoundAtTransform("answer", doorknob.transform);
                 costumeRender.material = costumes[CostumeNumber];
+                }
                 if (_doorAnimation != null)
                     StopCoroutine(_doorAnimation);
                 _doorAnimation = StartCoroutine(RotateDoor(true));
@@ -105,6 +122,13 @@ public class trickOrTreatScript : MonoBehaviour
                 sky.gameObject.SetActive(true);
             }
         }
+    }
+
+    private IEnumerator HorseSong()
+    {
+        yield return new WaitForSeconds(1.5f);
+        HorseMusic.Play();
+        yield break;
     }
 
     void Trick()
@@ -129,7 +153,7 @@ public class trickOrTreatScript : MonoBehaviour
 
             else
             {
-                if (CostumeNumber == 12)
+                if (_specialPerson)
                 {
                     Debug.LogFormat("[Trick Or Treat #{0}] YOU DID NOT GIVE THE SPECIAL PERSON ANY CANDY!? YOU ARE A MONSTER! A MONSTER!!! THAT IS A STRIKE!!!!!!", moduleId, StageAdvanced.ToString());
                 }
@@ -167,7 +191,7 @@ public class trickOrTreatScript : MonoBehaviour
 
             else
             {
-                if (CostumeNumber == 12)
+                if (_specialPerson)
                 {
                     Debug.LogFormat("[Trick Or Treat #{0}] I know you should give away some candy to the people that arrive, but you could have done the module faster if you just gave away all of them to that special person. Instead of solving, it struck instead.", moduleId, StageAdvanced.ToString());
                 }
@@ -187,7 +211,7 @@ public class trickOrTreatScript : MonoBehaviour
     {
         if (DoorOpened)
         {
-            if (CostumeNumber == 12)
+            if (_specialPerson)
             {
                 Debug.LogFormat("[Trick Or Treat #{0}] Special bowl of candy for a special person. You don't have to deal with other people know because your candy count is 0. Module solved.", moduleId, StageAdvanced.ToString());
                 PassTheModule();
@@ -224,6 +248,12 @@ public class trickOrTreatScript : MonoBehaviour
         TimeIntervals = StartCoroutine(TimerVariable());
     }
 
+    private void OnDestroy()
+    {
+        if (HorseMusic.isPlaying)
+            HorseMusic.Stop();
+    }
+
     IEnumerator TimerVariable()
     {
         var delayTime = Rnd.Range(1f, 3f) * delayMultiplier;
@@ -231,9 +261,9 @@ public class trickOrTreatScript : MonoBehaviour
         DoorbellRinging = true;
         Debug.LogFormat("[Trick Or Treat #{0}] The doorbell is ringing. Who could it be?", moduleId);
         TableE.gameObject.SetActive(true);
-        audio.PlaySoundAtTransform("doorbell", doorknob.transform);
+        Audio.PlaySoundAtTransform("doorbell", doorknob.transform);
         yield return new WaitForSecondsRealtime(waitTime);
-        audio.PlaySoundAtTransform("doorbell", doorknob.transform);
+        Audio.PlaySoundAtTransform("doorbell", doorknob.transform);
         yield return new WaitForSecondsRealtime(waitTime);
         if (!DoorOpened)
         {
@@ -256,6 +286,8 @@ public class trickOrTreatScript : MonoBehaviour
             yield return null;
             elapsed += Time.deltaTime;
         }
+        if (HorseMusic.isPlaying && !open)
+            HorseMusic.Stop();
         DoorParent.transform.localEulerAngles = new Vector3(0f, 0f, open ? 90f : 0f);
         if (!open)
         {
@@ -341,6 +373,8 @@ public class trickOrTreatScript : MonoBehaviour
             }
             if (CostumeNumber < 11)
             {
+                if (_specialHorse)
+                    yield return new WaitForSeconds(6f);
                 treat.OnInteract();
                 yield return new WaitForSeconds(0.1f);
                 continue;
