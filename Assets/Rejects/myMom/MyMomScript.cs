@@ -80,7 +80,7 @@ public class MyMomScript : MonoBehaviour
 
         x = 0;
         y = 0;
-        Debug.LogFormat("[My Mom #{0}] Position in grid: ({1}, {2})", moduleId, x + 1, y + 1);
+        //Debug.LogFormat("[My Mom #{0}] Position in grid: ({1}, {2})", moduleId, x + 1, y + 1);
 
         display = new char[2, 3];
         display[0, 0] = symbolTable[0,0];
@@ -119,7 +119,7 @@ public class MyMomScript : MonoBehaviour
 
         for (int i = 0; i < 6; i++)
             display[i / 3, i % 3] = newSymbolTable[y + initialOrder[i] / 3, x + initialOrder[i] % 3];
-        Debug.LogFormat("[My Mom #{0}] Initial display: {1} / {2}", moduleId, new string(Enumerable.Range(0, 2).Select(i => display[0, i]).ToArray()), new string(Enumerable.Range(0, 3).Select(i => display[1, i]).ToArray()));
+        Debug.LogFormat("[My Mom #{0}] Initial display: {1} / {2}", moduleId, new string(Enumerable.Range(0, 3).Select(i => display[0, i]).ToArray()), new string(Enumerable.Range(0, 3).Select(i => display[1, i]).ToArray()));
     }
 
     void OnActivate()
@@ -197,9 +197,7 @@ public class MyMomScript : MonoBehaviour
                 
                 if (display[j, i] != newSymbolTable[y + j, x + i])
                 {
-                    Debug.LogFormat("[My Mom #{0}] Wrong solution. Strike.", moduleId);
                     nani = true;
-                    Audio.PlaySoundAtTransform("screech", submitButton.transform);
                 }
                 if (display[j, i] == newSymbolTable[y + j, x + i])
                 {
